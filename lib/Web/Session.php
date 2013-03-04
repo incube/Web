@@ -1,5 +1,5 @@
 <?php
-namespace Incube;
+namespace Incube\Web;
 /** @author incubatio 
   * @depandancy Incube_Pattern_SingleTime_Abstract
   * @licence GPLv3.0 http://www.gnu.org/licenses/gpl.html
@@ -28,7 +28,7 @@ Class Session extends ASingleTime {
 	}
 
 	protected function __construct() {
-		$this->_data = DataObject::array_to_dataobject($_SESSION);	
+		$this->_data = DataObject::from_array($_SESSION);	
 	}
 
 	/** @param string $key

@@ -1,14 +1,14 @@
 <?php
+namespace Incube\Web\Http;
 /** @author incubatio
   * @licence GPLv3.0 http://www.gnu.org/licenses/gpl.html
-  * 
   */
-class Incube_HTTP_Query {
+class Query {
 
     //protected $_validsMethods = array('CONNECT', 'DELETE', 'GET', 'HEAD', 'OPTIONS', 'POST', 'PUT', 'TRACE');
 
 	/** @var string */
-    protected $_httpVersion = "1.0";
+    protected $_http_version = "1.0";
 
 	/** @var string */
     protected $_id;
@@ -26,7 +26,7 @@ class Incube_HTTP_Query {
     protected $_data = array();
 
 	/** @var string */
-    protected $_dataType = "Text/HTML";
+    protected $_data_type = "Text/HTML";
 
 	/** @var string */
     protected $_login;
@@ -39,18 +39,18 @@ class Incube_HTTP_Query {
 
 	/** @param string $id */
     public function get($id = null) {
-        return $this->initMethod("GET", $id);
+        return $this->init_method("GET", $id);
     }
 
 	/** @param string $id */
     public function delete($id = null) {
-        return $this->initMethod("DELETE", $id);
+        return $this->init_method("DELETE", $id);
     }
 
     /** Send query when id is undefined 
 	  * @param array | string $data */
     public function post($data = array()) {
-        return $this->initMethod("POST", "", $data);
+        return $this->init_method("POST", "", $data);
     }
 
     /** Send a query with a defined id, for creation with _id
@@ -58,14 +58,14 @@ class Incube_HTTP_Query {
 	  * @param string $id
 	  * @param array | string $data */
     public function put($id = null, $data = array()) {
-        return $this->initMethod("PUT", $id = null, $data);
+        return $this->init_method("PUT", $id = null, $data);
         //must contains _rev for an update
     }
 
 	/** @param string method
 	  * @param string $id
 	  * @param array | string $data */
-    protected function initMethod($method, $id = "", $data = array()) {
+    protected function init_method($method, $id = "", $data = array()) {
         $this->_method  = $method;
         $this->_data   = $data;
         $this->setId($id);
@@ -96,9 +96,9 @@ class Incube_HTTP_Query {
         return $this;
     }
 
-	/** @param string $dataType */
-    public function setDataType($dataType) {
-        $this->_dataType   = $dataType;
+	/** @param string $data_type */
+    public function set_data_type($data_type) {
+        $this->_data_type   = $data_type;
         //TODO : check datatype, regroup usage contentType and datatypes i don't know how, maybe in a structure/static class
         return $this;
     }
@@ -111,7 +111,7 @@ class Incube_HTTP_Query {
         return $this;
     }
 
-    public function getQuery() {
+    public function get_query() {
 		// Init URI
         $uri[] = "";
         $uri[] = $this->_db;
@@ -126,17 +126,17 @@ class Incube_HTTP_Query {
 //        }
 //        $data = implode("'", $elements);
 
-        $query[] = "{$this->_method} {$uri} HTTP/" . $this->_httpVersion;
+        $query[] = "{$this->_method} {$uri} HTTP/" . $this->_http_version;
         $query[] = "Host: {$this->_host}";
 
         if($this->_login || $this->_password) {
             $query[] .= 'Authorization: Basic '.base64_encode($this->_login.':'.$this->_password);
         }
 
-        if($this->_data || $this->_dataType) {
+        if($this->_data || $this->_data_type) {
             $query[] .= 'Content-Length: ' . strlen($data);
             //application/json
-            $query[] .= "Content-Type: $this->_dataType \r\n";
+            $query[] .= "Content-Type: $this->_data_type \r\n";
             $query[] .= $data;
         } else {
             $query[] = "";

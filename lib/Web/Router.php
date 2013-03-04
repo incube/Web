@@ -50,7 +50,7 @@ class Router {
         }
 
         $this->_files['controller'] = $urns['controller'] . ucfirst('controller') . '.php';
-        //$this->_view = $this->get_dirname('view') . DS . $this->_names['action'] . '.phtml';
+        //$this->_view = $this->get_dirname('view') . DIRECTORY_SEPARATOR . $this->_names['action'] . '.phtml';
 
     }
 
@@ -67,9 +67,9 @@ class Router {
     public function get_path($item) {
         $moduleDir = "";
         if($this->_container_dir == $this->get_dirname('module')) {
-            $moduleDir = $this->_container_dir . $this->get_dirname('controller') . DS;
+            $moduleDir = $this->_container_dir . $this->get_dirname('controller') . DIRECTORY_SEPARATOR;
         }
-        return $this->_app_path . DS . $moduleDir . $this->get_dirname($item);
+        return $this->_app_path . DIRECTORY_SEPARATOR . $moduleDir . $this->get_dirname($item);
     }
 
     /** @param string $key
@@ -81,13 +81,19 @@ class Router {
     /** @param string $item
      * @return string */
     public function get_file_path($item) {
-       return $this->get_path($item) . DS . $this->_files[$item];
+       return $this->get_path($item) . DIRECTORY_SEPARATOR . $this->_files[$item];
+    }
+
+    /** @param string $item
+     * @return string */
+    public function get_class_path($item) {
+       return $this->get_path($item) . DIRECTORY_SEPARATOR . ucfirst($this->_files[$item]);
     }
 
     /** @param string $item
      * @return string */
     public function get_url($item = "") {
-        $urlEnd = array_key_exists($item, $this->_urls) ? DS . $this->_urls[$item] :"";
+        $urlEnd = array_key_exists($item, $this->_urls) ? DIRECTORY_SEPARATOR . $this->_urls[$item] :"";
         return $this->_base_url . $urlEnd;
     }
 

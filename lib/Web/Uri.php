@@ -1,13 +1,14 @@
 <?php
 namespace Incube\Web;
 /** @author incubatio 
-  * @depandancy Incube_Pattern_IURI 
+  * @depandancy Incube_Pattern_IUri 
   * @licence GPLv3.0 http://www.gnu.org/licenses/gpl.html
   *
-  * TOTHINK: this class name is a URI parser, not a request object URI_Parser
+  * TOTHINK: this class name is a Uri parser, not a request object Uri_Parser
   */
-use Incube\Pattern\IURI;
-class URI implements IURI {
+use Incube\Base\Pattern\IUri,
+    Incube\Base\IncubeException;
+class Uri implements IUri {
 
     /** @var string */
     protected $_scheme = /*http://myWebsite.com/(lang/)*/'controller/action'/*/id/1*/;
@@ -28,18 +29,18 @@ class URI implements IURI {
     protected $_unplanned_params;
 
     /** @var string */
-    protected $_indexFile = 'index.php';
+    protected $_index_file = 'index.php';
 
     /** @var string */
     protected $_headers;
 
-	/** @param string $URI
+	/** @param string $Uri
 	  * @param array options */
-    public function __construct($URI, array $options = array()) {
+    public function __construct($Uri, array $options = array()) {
 
          $this->init_options($options);
 
-         $params = explode($this->_separator, $URI);
+         $params = explode($this->_separator, $Uri);
 
         $this->_params = $this->_parse_params($params);
     }
@@ -67,7 +68,7 @@ class URI implements IURI {
 
 	/** TODO: REVIEW get_content_type Incube_Router_Request method
 	  * No priority, just check if Http request allow content-type
-    * TODO: ContentType belonf to a Request object not to a URI
+    * TODO: ContentType belonf to a Request object not to a Uri
 	  * @return mixed  */
 	public function get_content_type() {
 		if ($this->HTTP_ACCEPT) {
@@ -86,7 +87,7 @@ class URI implements IURI {
     /** @param array $params
       * @return array */
     protected function _parse_params($params) {
-        //Get main params from the $URI thanks to the _scheme
+        //Get main params from the $Uri thanks to the _scheme
         $params = array_values($params);
         $main_params = array();
         foreach(explode($this->_separator, $this->_scheme) as $key => $value) {
@@ -98,12 +99,12 @@ class URI implements IURI {
 					else $main_params[$value] = $this->_default[$value];
 				} else {
 					if(isset($this->_validation[$value]) AND !preg_match("/" . $this->_validation[$value] . "/", $params[$key])) 
-						throw new Incube_Exception("Wrong URL format");
+						throw new IncubeException("Wrong URL format");
 					$main_params[$value] = $params[$key];
 				}
 			} else {
 				if(!empty($params[$key])){
-					if($params[$key] != $value) throw new Incube_Exception("Static Params: $key is missing");
+					if($params[$key] != $value) throw new IncubeException("Static Params: $key is missing");
 				}
 				$main_params[$value] = $value;
 			}
@@ -111,7 +112,7 @@ class URI implements IURI {
         }
 		$this->_main_params = $main_params;
 
-        //Get the other params form the $URI like : /id/1 makes $param['id'] = 1
+        //Get the other params form the $Uri like : /id/1 makes $param['id'] = 1
         //$other_params is stocked by the class to be reused by a router if necessary
         $this->_unplanned_params = $params;
         $other_params = array();
