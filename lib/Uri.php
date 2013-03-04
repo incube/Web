@@ -36,11 +36,14 @@ class Uri implements IUri {
 
 	/** @param string $Uri
 	  * @param array options */
-    public function __construct($Uri, array $options = array()) {
+    public function __construct($uri, array $options = array()) {
 
-         $this->init_options($options);
+        $this->init_options($options);
 
-         $params = explode($this->_separator, $Uri);
+        // remove get
+        $parts = explode('?', $uri);
+
+        $params = explode($this->_separator, $parts[0]);
 
         $this->_params = $this->_parse_params($params);
     }
